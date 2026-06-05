@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      coach_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      goal_plans: {
+        Row: {
+          created_at: string
+          goal: string
+          id: string
+          plan: Json
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          goal: string
+          id?: string
+          plan: Json
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          goal?: string
+          id?: string
+          plan?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
       habit_logs: {
         Row: {
           id: string
@@ -91,25 +139,46 @@ export type Database = {
           calorie_goal: number
           created_at: string
           display_name: string | null
+          height_cm: number | null
           id: string
+          phone: string | null
+          protein_goal_g: number
           step_goal: number
+          target_months: number | null
           updated_at: string
+          water_goal_ml: number
+          weight_goal_kg: number | null
+          weight_kg: number | null
         }
         Insert: {
           calorie_goal?: number
           created_at?: string
           display_name?: string | null
+          height_cm?: number | null
           id: string
+          phone?: string | null
+          protein_goal_g?: number
           step_goal?: number
+          target_months?: number | null
           updated_at?: string
+          water_goal_ml?: number
+          weight_goal_kg?: number | null
+          weight_kg?: number | null
         }
         Update: {
           calorie_goal?: number
           created_at?: string
           display_name?: string | null
+          height_cm?: number | null
           id?: string
+          phone?: string | null
+          protein_goal_g?: number
           step_goal?: number
+          target_months?: number | null
           updated_at?: string
+          water_goal_ml?: number
+          weight_goal_kg?: number | null
+          weight_kg?: number | null
         }
         Relationships: []
       }
