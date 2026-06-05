@@ -81,7 +81,7 @@ export function ProfileSetup({ userId, profile }: { userId: string; profile: Pro
         <Field label="Protein goal (g)"><input type="number" value={form.protein_goal_g} onChange={(e) => setForm({ ...form, protein_goal_g: e.target.value })} className="input" /></Field>
         <Field label="Step goal"><input type="number" value={form.step_goal} onChange={(e) => setForm({ ...form, step_goal: e.target.value })} className="input" /></Field>
         <Field label="Calorie goal"><input type="number" value={form.calorie_goal} onChange={(e) => setForm({ ...form, calorie_goal: e.target.value })} className="input" /></Field>
-      </Field>
+      </div>
       <Field label="Phone (optional)">
         <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="input" placeholder="+1 555 123 4567" />
       </Field>
