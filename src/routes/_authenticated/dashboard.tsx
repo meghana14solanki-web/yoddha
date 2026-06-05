@@ -31,6 +31,11 @@ import {
   upsertHabit,
   type Workout,
 } from "@/lib/fitness";
+import { CoachChat } from "@/components/fitness/CoachChat";
+import { GoalPlanner } from "@/components/fitness/GoalPlanner";
+import { MealCamera } from "@/components/fitness/MealCamera";
+import { LeagueBadge } from "@/components/fitness/LeagueBadge";
+import { ProfileSetup } from "@/components/fitness/ProfileSetup";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -292,6 +297,33 @@ function DashboardPage() {
                 ))}
               </ul>
             )}
+          </Card>
+        </div>
+
+        {/* AI Coach + Goal Planner */}
+        <div className="mt-8 grid gap-6 lg:grid-cols-2">
+          <Card title="AI Fitness Coach" eyebrow="Talk to Yodha">
+            <CoachChat userId={userId} />
+          </Card>
+          <Card title="Goal-to-Plan Generator" eyebrow="Your roadmap">
+            <GoalPlanner userId={userId} />
+          </Card>
+        </div>
+
+        {/* Meal Camera + League */}
+        <div className="mt-8 grid gap-6 lg:grid-cols-2">
+          <Card title="Snap a meal" eyebrow="AI meal recognition">
+            <MealCamera userId={userId} />
+          </Card>
+          <Card title="Fitness League" eyebrow="Rank & share">
+            <LeagueBadge workouts={workouts} displayName={profile?.display_name} />
+          </Card>
+        </div>
+
+        {/* Profile setup */}
+        <div className="mt-8">
+          <Card title="Your profile & goals" eyebrow="Setup">
+            <ProfileSetup userId={userId} profile={profile ?? null} />
           </Card>
         </div>
 
