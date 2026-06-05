@@ -10,6 +10,7 @@ import {
   Dumbbell,
   Flame,
   Footprints,
+  Loader2,
   LogOut,
   Minus,
   Moon,
