@@ -428,9 +428,9 @@ function CTA() {
           Join 2.4M people who let AI handle the planning so they can focus on
           showing up.
         </p>
-        <button className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-8 py-4 text-sm font-semibold text-primary-foreground transition hover:bg-primary-glow glow-primary">
+        <Link to="/auth" className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-8 py-4 text-sm font-semibold text-primary-foreground transition hover:bg-primary-glow glow-primary">
           Start free <ArrowRight className="h-4 w-4" />
-        </button>
+        </Link>
       </div>
     </section>
   );
