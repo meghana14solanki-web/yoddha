@@ -52,8 +52,9 @@ function DashboardPage() {
 
   // Realtime: re-fetch on any change to the user's rows
   useEffect(() => {
+    void supabase.realtime.setAuth();
     const ch = supabase
-      .channel(`user-${userId}`)
+      .channel(`user-${userId}`, { config: { private: true } })
       .on("postgres_changes", { event: "*", schema: "public", table: "workouts", filter: `user_id=eq.${userId}` }, () =>
         qc.invalidateQueries({ queryKey: ["workouts", userId] }),
       )
