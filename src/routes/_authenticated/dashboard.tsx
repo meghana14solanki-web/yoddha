@@ -169,6 +169,13 @@ function DashboardPage() {
           </h1>
         </div>
 
+        {/* Profile setup (top) */}
+        <div className="mb-8">
+          <Card title="Your profile & goals" eyebrow="Setup">
+            <ProfileSetup userId={userId} profile={profile ?? null} />
+          </Card>
+        </div>
+
         {/* Top stat strip */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard icon={Flame} label="Burned today" value={caloriesBurnedToday} unit="kcal" accent />
