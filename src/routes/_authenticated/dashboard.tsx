@@ -327,13 +327,6 @@ function DashboardPage() {
           </Card>
         </div>
 
-        {/* Profile setup */}
-        <div className="mt-8">
-          <Card title="Your profile & goals" eyebrow="Setup">
-            <ProfileSetup userId={userId} profile={profile ?? null} />
-          </Card>
-        </div>
-
         {/* Recent workouts */}
         <div className="mt-8">
           <Card title="Recent workouts" eyebrow="History">
