@@ -610,19 +610,21 @@ function MealForm({ userId }: { userId: string }) {
         ))}
       </select>
       <div className="grid grid-cols-4 gap-2">
-        {[
-          ["Cal", calories, setCalories],
-          ["P", protein, setProtein],
-          ["C", carbs, setCarbs],
-          ["F", fat, setFat],
-        ].map(([label, val, set]) => (
-          <label key={label as string} className="block">
+        {(
+          [
+            ["Cal", calories, setCalories],
+            ["P", protein, setProtein],
+            ["C", carbs, setCarbs],
+            ["F", fat, setFat],
+          ] as const
+        ).map(([label, val, set]) => (
+          <label key={label} className="block">
             <span className="mb-1 block text-center text-[10px] uppercase tracking-widest text-muted-foreground">{label}</span>
             <input
               type="number"
               min="0"
-              value={val as string}
-              onChange={(e) => (set as (v: string) => void)(e.target.value)}
+              value={val}
+              onChange={(e) => set(e.target.value)}
               className="input text-center"
             />
           </label>
