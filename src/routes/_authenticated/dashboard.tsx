@@ -599,33 +599,46 @@ function WorkoutForm({ userId }: { userId: string }) {
 
 function MealForm({ userId }: { userId: string }) {
   const [name, setName] = useState("");
-  const [mealType, setMealType] = useState("lunch");
-  const [calories, setCalories] = useState("500");
-  const [protein, setProtein] = useState("30");
-  const [carbs, setCarbs] = useState("50");
-  const [fat, setFat] = useState("15");
-  const [submitting, setSubmitting] = useState(false);
+  const [mealType, setMealType] = useState<"breakfast" | "lunch" | "dinner" | "snack">("lunch");
+  const [busy, setBusy] = useState(false);
+  const [preview, setPreview] = useState<{
+    calories: number;
+    protein_g: number;
+    carbs_g: number;
+    fat_g: number;
+  } | null>(null);
+  const estimate = useServerFn(estimateMealFromText);
+  const qc = useQueryClient();
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
-    if (!name.trim()) return toast.error("Give the meal a name.");
-    setSubmitting(true);
+    if (!name.trim()) return toast.error("Describe what you ate.");
+    setBusy(true);
+    setPreview(null);
     try {
+      const est = await estimate({ data: { description: name.trim(), meal_type: mealType } });
       await addMeal({
         user_id: userId,
-        name: name.trim(),
-        meal_type: mealType,
-        calories: Number(calories) || 0,
-        protein_g: Number(protein) || 0,
-        carbs_g: Number(carbs) || 0,
-        fat_g: Number(fat) || 0,
+        name: est.name,
+        meal_type: est.meal_type,
+        calories: est.calories,
+        protein_g: est.protein_g,
+        carbs_g: est.carbs_g,
+        fat_g: est.fat_g,
       });
-      toast.success("Meal added");
+      setPreview({
+        calories: est.calories,
+        protein_g: est.protein_g,
+        carbs_g: est.carbs_g,
+        fat_g: est.fat_g,
+      });
+      toast.success(`Logged ${est.name} · ${est.calories} kcal`);
       setName("");
+      await qc.invalidateQueries({ queryKey: ["meals-today", userId] });
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Could not save");
+      toast.error(e instanceof Error ? e.message : "Could not estimate");
     } finally {
-      setSubmitting(false);
+      setBusy(false);
     }
   }
 
@@ -634,42 +647,51 @@ function MealForm({ userId }: { userId: string }) {
       <input
         value={name}
         onChange={(e) => setName(e.target.value)}
-        placeholder="Grilled chicken bowl"
+        placeholder="e.g. 2 chapatis with dal and salad"
         className="input"
       />
-      <select value={mealType} onChange={(e) => setMealType(e.target.value)} className="input">
-        {["breakfast", "lunch", "dinner", "snack"].map((t) => (
+      <select
+        value={mealType}
+        onChange={(e) => setMealType(e.target.value as typeof mealType)}
+        className="input"
+      >
+        {(["breakfast", "lunch", "dinner", "snack"] as const).map((t) => (
           <option key={t} value={t}>{t}</option>
         ))}
       </select>
-      <div className="grid grid-cols-4 gap-2">
-        {(
-          [
-            ["Cal", calories, setCalories],
-            ["P", protein, setProtein],
-            ["C", carbs, setCarbs],
-            ["F", fat, setFat],
-          ] as const
-        ).map(([label, val, set]) => (
-          <label key={label} className="block">
-            <span className="mb-1 block text-center text-[10px] uppercase tracking-widest text-muted-foreground">{label}</span>
-            <input
-              type="number"
-              min="0"
-              value={val}
-              onChange={(e) => set(e.target.value)}
-              className="input text-center"
-            />
-          </label>
-        ))}
-      </div>
       <button
         type="submit"
-        disabled={submitting}
-        className="w-full rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary-glow disabled:opacity-60"
+        disabled={busy}
+        className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary-glow disabled:opacity-60"
       >
-        Add meal
+        {busy ? (
+          <>
+            <Loader2 className="h-4 w-4 animate-spin" /> Estimating with AI…
+          </>
+        ) : (
+          <>
+            <Sparkles className="h-4 w-4" /> Log with AI
+          </>
+        )}
       </button>
+      <p className="text-[11px] text-muted-foreground">
+        Just type what you ate — AI calculates calories, protein, carbs and fat.
+      </p>
+      {preview && (
+        <div className="grid grid-cols-4 gap-2 pt-1 text-center">
+          {[
+            ["Cal", preview.calories],
+            ["P", `${preview.protein_g}g`],
+            ["C", `${preview.carbs_g}g`],
+            ["F", `${preview.fat_g}g`],
+          ].map(([l, v]) => (
+            <div key={l as string} className="rounded-lg bg-surface-elevated p-2">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">{l}</p>
+              <p className="font-display text-sm font-bold text-primary">{v}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </form>
   );
 }
