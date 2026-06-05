@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Activity,
   Apple,
@@ -72,12 +72,18 @@ function Nav() {
           <a href="#coach" className="transition hover:text-foreground">AI Coach</a>
         </nav>
         <div className="flex items-center gap-3">
-          <button className="hidden text-sm text-muted-foreground transition hover:text-foreground sm:inline">
+          <Link
+            to="/auth"
+            className="hidden text-sm text-muted-foreground transition hover:text-foreground sm:inline"
+          >
             Sign in
-          </button>
-          <button className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary-glow glow-primary">
+          </Link>
+          <Link
+            to="/auth"
+            className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary-glow glow-primary"
+          >
             Start free
-          </button>
+          </Link>
         </div>
       </div>
     </header>
@@ -101,14 +107,20 @@ function Hero() {
             food on your plate. One app for body, mind, and momentum.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
-            <button className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary-glow glow-primary">
+            <Link
+              to="/auth"
+              className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary-glow glow-primary"
+            >
               Build my plan
               <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
-            </button>
-            <button className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-surface-elevated">
+            </Link>
+            <Link
+              to="/dashboard"
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-surface-elevated"
+            >
               <Play className="h-4 w-4" />
-              Watch demo
-            </button>
+              Open dashboard
+            </Link>
           </div>
           <dl className="mt-14 grid max-w-md grid-cols-3 gap-6">
             {[
