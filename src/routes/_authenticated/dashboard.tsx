@@ -31,6 +31,11 @@ import {
   upsertHabit,
   type Workout,
 } from "@/lib/fitness";
+import { CoachChat } from "@/components/fitness/CoachChat";
+import { GoalPlanner } from "@/components/fitness/GoalPlanner";
+import { MealCamera } from "@/components/fitness/MealCamera";
+import { LeagueBadge } from "@/components/fitness/LeagueBadge";
+import { ProfileSetup } from "@/components/fitness/ProfileSetup";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
