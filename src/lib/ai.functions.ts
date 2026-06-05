@@ -182,3 +182,36 @@ export const recognizeMeal = createServerFn({ method: "POST" })
     await supabase.from("meals").insert({ user_id: userId, ...object });
     return object;
   });
+
+/* ---------------- Meal Estimation from Text ---------------- */
+const MealEstimateSchema = z.object({
+  name: z.string(),
+  meal_type: z.enum(["breakfast", "lunch", "dinner", "snack"]),
+  calories: z.number().int().min(0).max(5000),
+  protein_g: z.number().int().min(0).max(500),
+  carbs_g: z.number().int().min(0).max(500),
+  fat_g: z.number().int().min(0).max(500),
+});
+
+export const estimateMealFromText = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({
+      description: z.string().min(2).max(300),
+      meal_type: z.enum(["breakfast", "lunch", "dinner", "snack"]).optional(),
+    }).parse(d),
+  )
+  .handler(async ({ data }) => {
+    const hour = new Date().getHours();
+    const defaultType =
+      data.meal_type ??
+      (hour < 11 ? "breakfast" : hour < 16 ? "lunch" : hour < 21 ? "dinner" : "snack");
+    const { object } = await generateObject({
+      model: gateway()(MODEL),
+      schema: MealEstimateSchema,
+      prompt: `Estimate realistic nutrition for a single serving of: "${data.description}".
+Return calories (kcal) and grams of protein, carbs, fat. Normalize the name to a clean title.
+Use meal_type "${defaultType}" unless the description clearly implies another type.`,
+    });
+    return object;
+  });
